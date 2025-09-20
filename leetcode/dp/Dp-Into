@@ -1,0 +1,23 @@
+dp patterns----------
+
+DP is: Those who cannot remember the past are condemned to repeat it.
+        It means whenever we have problems which contains oevrlapping subproblems, we should optimise it by not calculating the same 
+        data again, rather store the data in memeory and use it when required. Like memoisation and tabulation.
+
+basics 1D:
+
+Recursion to dp : either memoisation or tabulation
+
+1. memoisation: [Top Down - try calculating the answer you require and go to the base case, and finally get the answer]
+ - find the changing parameter in recusion fun like fun(n) - theres one parameter hence create a 1D dp array.
+ - assign the return value in recursion to dp array index for that n value - ;like return fun(n) + fun(n-1) will be like
+    return dp[n] = fun(n)+ fun(n-1);
+ - if the value has been calculated already return that - if(dp[n] != -1_n return dp[n]
+
+2. Tabulation: [Bottom up - calculate the base case and go up to the required answer]
+ - find the changing parameter in recusion fun like fun(n) - theres one parameter hence create a 1D dp array.
+ - run the loop for that array and assign the value for dp[i] = dp[i-1] + dp[i-2] ( the values which are being returned actually in recursion.
+ - write the base conditions - the one which we have in recursion or memoisation logic. it can be either top down or bottom up, doesnt matter.
+  It tottally depends on how we approach the problem.
+
+practice makes a man perfect!!
