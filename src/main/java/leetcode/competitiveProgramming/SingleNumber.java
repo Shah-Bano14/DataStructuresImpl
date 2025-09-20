@@ -1,7 +1,5 @@
-package leetcode;
+package leetcode.competitiveProgramming;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 
 public class SingleNumber {

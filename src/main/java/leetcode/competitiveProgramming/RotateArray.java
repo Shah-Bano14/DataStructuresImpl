@@ -1,6 +1,4 @@
-package leetcode;
-
-import java.util.Arrays;
+package leetcode.competitiveProgramming;
 
 public class RotateArray {
     public static void rotateWithTLE(int[] nums, int k) {

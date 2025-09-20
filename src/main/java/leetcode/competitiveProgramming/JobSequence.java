@@ -1,4 +1,4 @@
-package leetcode;
+package leetcode.competitiveProgramming;
 import java.io.*;
 import java.lang.*;
 import java.util.*;

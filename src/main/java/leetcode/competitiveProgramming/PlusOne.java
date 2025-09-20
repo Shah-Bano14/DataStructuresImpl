@@ -1,4 +1,4 @@
-package leetcode;
+package leetcode.competitiveProgramming;
 
 import java.util.Arrays;
 
