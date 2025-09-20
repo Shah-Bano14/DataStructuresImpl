@@ -1,5 +1,11 @@
 package leetcode.dp;
 
+
+/*
+TC = 0 n*K
+SC = recurive ( n(loop) +n(recursive stack space) = n),
+ tabulation = o(n)- loop
+ */
 import java.util.Arrays;
 
 /*
