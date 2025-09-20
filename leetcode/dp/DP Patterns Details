@@ -1,0 +1,15 @@
+Mentioning below important points in one place we should consider while dealing with DP problems:
+
+1. How to understand if its a DP problem:
+  - count the total number of ways/all possible ways ( count all ways and sum it up)
+  - there can be multiple ways of doing something and ques asks count distinct ways, or count the minimum/maximum ways ( we count all ways and coonsider the best one)
+  - These problems are recursion probelms  - hence dp problems
+
+how to master recursion:
+1. Try to represent the problem in terms of index
+2. Do all possible stuffs on that index accordind to the problem statement
+3. if the ques says count all ways: sum up all stuffs
+4. if ques says find minimum: take minimum of all stuffs
+5. similar for max.
+
+-----To optimise it : memoise it to convert to DP and use tabulation or spoace optimisation as per your choice.
