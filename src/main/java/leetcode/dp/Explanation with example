@@ -62,3 +62,67 @@ public static int climbStairsRescursion(int n) {
 
         return dp1[n];
     }
+
+
+
+---------------------------------------- Example 2---------------------------------------
+
+This the question NinjaTraining ---------- look into dp solutions----------------
+    
+
+//note to convert to tabulation, you hav eto create as many loops as of the changing index values in the memo solution
+        // eg, in this question, there are two changing values - day and lastTask, so we create a two loops for both
+        // and then we copy the same code as memo just changeing the recursive calls to dp values
+        // also note: the dp array maytrix dimension is also equal to changing varibales count, heres a 2D array
+        // since 2 chanding variables....
+
+private static int tabulation(int n, int task, int[][] mat) {
+
+        //base condition : the values when dp[0][n] == values when ninja has one day only, what are the max values he gets for a last task t
+        // eg.last task is 1, then max will be max(1, 2)
+        int dp[][] = new int[mat.length][task];
+        dp[0][0] = Math.max(mat[0][1], mat[0][2]);
+        dp[0][1] = Math.max(mat[0][0], mat[0][2]);
+        dp[0][2] = Math.max(mat[0][0], mat[0][1]);
+        dp[0][3] = Math.max(mat[0][0], Math.max( mat[0][2], mat[0][1]));
+        for(int i=1;i< mat.length;i++)
+        {
+            for(int taskLast=0;taskLast<task;taskLast++)
+            {
+                int max = Integer.MIN_VALUE;
+                for(int k=0;k<mat[0].length;k++)
+                {
+                    if(k!=taskLast)
+                        max = Math.max(max, mat[i][k] + dp[i-1][k]);
+                }
+
+                dp[i][taskLast] = max;
+            }
+        }
+
+        return dp[mat.length-1][dp[0].length-1];
+    }
+
+
+
+// hre try and understand what this function mean
+    // fun(n, task) if from (n-1->0) means what is the max merit the ninja has earned
+    //if he perfornmmed the task from 0 to nth index with the last task as task.
+    // in reverse, when you go from 0-> n-1 ( passing 0 in function first) ---> it means
+    // whgats the max merit ninja has earned when he performed tasks from n-1 to nth day with last task being = task
+
+    private static int rec(int n, int[][] mat, int task) {
+
+        if(n==mat.length)
+            return 0;
+
+        int max = Integer.MIN_VALUE;
+        for(int i=0;i<mat[0].length;i++)
+        {
+            if(task!=i)
+                max = Math.max(max, mat[n][i] + rec(n+1, mat, i));
+
+        }
+
+        return max;
+    }
