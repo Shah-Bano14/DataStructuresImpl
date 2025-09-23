@@ -1,0 +1,75 @@
+Scalability--------- Sept-22
+
+1. first golden rule for scalability: every server contains exactly the same codebase and does not store any user-related data, 
+like sessions or profile pictures, on local disc or memory.
+
+-Sessions need to be stored in a centralized data store which is accessible to all your application servers. It can be an external database or an external persistent cache, like Redis.
+
+2. Why Redis (Persistent Cache) is Faster than a Database
+RAM-based storage → Redis keeps data in memory (RAM), while databases rely mainly on disk. Accessing RAM is much faster than disk I/O. (Main reason)
+Lightweight structures → Redis uses simple key-value, hash, list, set structures instead of complex SQL schemas.
+Low latency → Typical Redis operations take sub-milliseconds; DB queries are slower due to parsing, indexing, and disk access.
+Efficient design → Single-threaded event loop avoids locks/context switching, unlike multi-threaded databases.
+Optimized throughput → Supports pipelining (batch commands in one trip).
+Persistence is secondary → Redis writes to disk asynchronously for durability, while databases must enforce ACID rules on every operation, adding overhead.
+⚖️ Trade-off
+Redis → Speed, caching hot data, simple lookups.
+Database → Reliability, durability, transactions, complex queries.
+
+- Capistrano is a deployment automation tool that helps you deploy and manage applications on remote servers via SSH, reducing manual steps and errors.
+ChatGPT said:
+
+- Use AMI (Amazon Machine Image) → Create a server image as a “super-clone” and launch new instances from it, then deploy the latest code.
+
+3. your servers can now horizontally scale and you can already serve thousands of concurrent requests. but the application again gets slower due to DB Mysql:
+
+- path 1: increase database power, --> gte a dba and do a master slave arcgitecture --> stttill slow over time with increase in user
+--> do a sharding ---> then do sql tuning --> denormalisation
+
+and you realise , you should have done denormalisation when db was small.
+
+solution-- denormalise DB and use a Nosql DB like mongoDB or couch DB where there are no joins inside db and then ytou have to ghandle joijns in your application
+perfect--> but then again after some time, you face slowness when alot of users try to use the DB at the same time, the slowness is not for you but for users.
+
+4. Solution is Introduce Cache
+With “cache” I always mean in-memory caches like Memcached or Redis. Please never do file-based caching, it makes cloning and auto-scaling of your servers just a pain. 
+why?
+--- File cache lives on each app server, so it’s not shared; server failure = cache lost.
+Redis lives on dedicated nodes, centralized, and can be replicated and clustered → safer, faster, and shared.
+Even if one Redis node dies, replicas or cluster nodes keep cache alive, unlike file-based cache where loss is permanent.
+
+🏷️ Two Caching Patterns----------------------------
+1. Cached Database Queries (Old Pattern)
+Store query results in cache using a hashed query as the key.
+Issues: Hard to expire cached results when underlying data changes.
+Problematic for complex queries – updating one piece of data may require deleting many cached queries.
+2. Cached Objects (Recommended)
+Treat your data as objects (e.g., class instances).
+After assembling the object from multiple DB requests, store the full object or dataset in cache.
+Advantages:
+Easier to invalidate when something changes.
+Faster and more logical code flow.
+Enables asynchronous processing: worker servers assemble objects; app servers just read cached objects.
+
+------------Asynchronous Processing-----------------
+Two Async Paradigms
+
+Async #1 – Pre-compute / Pre-render
+Do time-consuming work before user requests it (e.g., pre-render pages into static HTML).
+Benefits: Low request time, highly scalable, works well with CDNs (S3/Cloudfront).
+Often implemented via scheduled scripts or cronjobs.
+
+Async #2 – On-demand / Job Queue
+Handle tasks cannot be pre-computed (e.g., personalized reports).
+Workflow:
+User triggers a long-running task on the frontend.
+Frontend sends job to a queue and immediately responds: “Job in progress.”
+Workers process queued jobs.
+Once done, frontend is notified and informs the user.
+Tools: RabbitMQ, ActiveMQ, Redis lists, or other job queues.
+Benefits: Backends are scalable, frontends remain responsive.
+Key Takeaways
+Always perform time-consuming tasks asynchronously.
+Async #1 → Pre-compute predictable content.
+Async #2 → Use job queues for heavy or unpredictable tasks.
+Improves scalability, performance, and user experience.
